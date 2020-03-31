@@ -59,16 +59,30 @@ export default class App extends React.Component {
       });
   }, 250);
 
-  _renderFooter = () => {
-    if (!this.state.isLoading) return null;
+  render() {
     return (
-      <View style={styles.indicator}>
-        <ActivityIndicator animating size="large" />
-      </View>
+      <Container>
+        <Header searchBar rounded>
+          <Item>
+            {/* <Icon name="ios-search" /> */}
+            <Input placeholder="Search" onChangeText={this.handleSearch} />
+          </Item>
+        </Header>
+        <List>
+          <FlatList
+            data={this.state.data}
+            renderItem={this.renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            // ListFooterComponent={this.renderFooter}
+            refreshing={this.state.isLoading}
+            onRefresh={this.loadingData}
+          />
+        </List>
+      </Container>
     );
-  };
+  }
 
-  _renderItem = ({item, index}) => {
+  renderItem = ({item, index}) => {
     return (
       <ListItem avatar onPress={() => alert(item.country)}>
         <Left>
@@ -86,6 +100,15 @@ export default class App extends React.Component {
     );
   };
 
+  renderFooter = () => {
+    if (!this.state.isLoading) return null;
+    return (
+      <View style={styles.indicator}>
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
   handleSearch = text => {
     const formattedQuery = text.toLowerCase();
     const data = _.filter(this.state.fullData, countries => {
@@ -99,27 +122,6 @@ export default class App extends React.Component {
       query: text,
     });
   };
-
-  render() {
-    return (
-      <Container>
-        <Header searchBar rounded>
-          <Item>
-            {/* <Icon name="ios-search" /> */}
-            <Input placeholder="Search" onChangeText={this.handleSearch} />
-          </Item>
-        </Header>
-        <List>
-          <FlatList
-            data={this.state.data}
-            renderItem={this._renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            ListFooterComponent={this._renderFooter}
-          />
-        </List>
-      </Container>
-    );
-  }
 }
 
 const styles = StyleSheet.create({
