@@ -1,0 +1,8 @@
+const VARS = {
+  REFRESH_TIME_LAPS: 1,
+
+  KEY_COUNTRY: 'KEY_COUNTRY',
+  KEY_OLD_CASES_NB: 'KEY_OLD_CASES_NB',
+};
+
+export {VARS};

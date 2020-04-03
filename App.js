@@ -1,139 +1,60 @@
 import React from 'react';
-import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
-import {
-  Container,
-  Header,
-  Item,
-  Input,
-  Icon,
-  List,
-  ListItem,
-  Left,
-  Body,
-  Right,
-  Thumbnail,
-  Text,
-} from 'native-base';
-import _ from 'lodash';
+import {StyleSheet, View, Text, Image} from 'react-native';
 
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
+import {CurrentCountry, Globe, AllCountries, Settings} from './src/tab';
+
+import {IMAGE} from './src/constants/Images';
+
+const Tab = createBottomTabNavigator();
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      data: [],
-      fullData: [],
-      error: null,
-      query: '',
-      // timeLaps: 1,
-    };
-  }
-
-  componentDidMount() {
-    // this.interval = setInterval(() => {
-    this.loadingData();
-    //   }, this.state.timeLaps * 60 * 1000);
-  }
-
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // }
-
-  loadingData = _.debounce(() => {
-    console.log('calling loadingData');
-    const apiURL = 'https://corona.lmao.ninja/countries';
-    return fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          isLoading: false,
-          data: responseJson,
-          fullData: responseJson,
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: error,
-          isLoading: false,
-        });
-      });
-  }, 250);
-
   render() {
     return (
-      <Container>
-        <Header searchBar rounded>
-          <Item>
-            {/* <Icon name="ios-search" /> */}
-            <Input placeholder="Search" onChangeText={this.handleSearch} />
-          </Item>
-        </Header>
-        <List>
-          <FlatList
-            data={this.state.data}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            // ListFooterComponent={this.renderFooter}
-            refreshing={this.state.isLoading}
-            onRefresh={this.loadingData}
-          />
-        </List>
-      </Container>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
+
+              if (route.name === 'Your Country') {
+                iconName = focused
+                  ? IMAGE.ICON_CURRENT_COUNTRY_DARK
+                  : IMAGE.ICON_CURRENT_COUNTRY;
+              } else if (route.name === 'Globe') {
+                iconName = focused ? IMAGE.ICON_GLOBE_DARK : IMAGE.ICON_GLOBE;
+              } else if (route.name === 'All Counties') {
+                iconName = focused
+                  ? IMAGE.ICON_ALL_COUNTRIES_DARK
+                  : IMAGE.ICON_ALL_COUNTRIES;
+              } else if (route.name === 'Settings') {
+                iconName = focused
+                  ? IMAGE.ICON_SETTINGS_DARK
+                  : IMAGE.ICON_SETTINGS;
+              }
+
+              return (
+                <Image
+                  source={iconName}
+                  style={{width: 20, height: 20}}
+                  resizeMode="contain"
+                />
+              );
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: 'green',
+            inactiveTintColor: 'black',
+          }}>
+          <Tab.Screen name="Your Country" component={CurrentCountry} />
+          <Tab.Screen name="Globe" component={Globe} />
+          <Tab.Screen name="All Counties" component={AllCountries} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Tab.Navigator>
+      </NavigationContainer>
     );
   }
-
-  renderItem = ({item, index}) => {
-    return (
-      <ListItem avatar onPress={() => alert(item.country)}>
-        <Left>
-          <Thumbnail source={{uri: item.countryInfo.flag}} />
-        </Left>
-        <Body>
-          <Text>{item.country}</Text>
-          <Text note>cases : {item.cases}</Text>
-          <Text note>todayCases : {item.todayCases}</Text>
-        </Body>
-        {/* <Right>
-          <Text note>3:43 pm</Text>
-        </Right> */}
-      </ListItem>
-    );
-  };
-
-  renderFooter = () => {
-    if (!this.state.isLoading) return null;
-    return (
-      <View style={styles.indicator}>
-        <ActivityIndicator animating size="large" />
-      </View>
-    );
-  };
-
-  handleSearch = text => {
-    const formattedQuery = text.toLowerCase();
-    const data = _.filter(this.state.fullData, countries => {
-      if (countries.country.toLowerCase().includes(formattedQuery)) {
-        return true;
-      }
-      return false;
-    });
-    this.setState({
-      data: data,
-      query: text,
-    });
-  };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f00',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  indicator: {
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderColor: '#CED0CE',
-  },
-});
+const styles = StyleSheet.create({});
