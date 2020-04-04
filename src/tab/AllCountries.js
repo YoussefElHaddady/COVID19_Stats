@@ -43,15 +43,15 @@ export class AllCountries extends Component {
     console.log('calling loadingData');
     const apiURL = 'https://corona.lmao.ninja/countries';
     return fetch(apiURL)
-      .then(response => response.json())
-      .then(responseJson => {
+      .then((response) => response.json())
+      .then((responseJson) => {
         this.setState({
           isLoading: false,
           data: responseJson,
           fullData: responseJson,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           error: error,
           isLoading: false,
@@ -110,9 +110,9 @@ export class AllCountries extends Component {
     );
   };
 
-  handleSearch = text => {
+  handleSearch = (text) => {
     const formattedQuery = text.toLowerCase();
-    const data = _.filter(this.state.fullData, countries => {
+    const data = _.filter(this.state.fullData, (countries) => {
       if (countries.country.toLowerCase().includes(formattedQuery)) {
         return true;
       }

@@ -38,9 +38,8 @@ export class CurrentCountry extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
-      currentCountry: '',
       data: [],
-      location: '',
+      currentCountry: '',
       error: null,
     };
   }
@@ -90,18 +89,18 @@ export class CurrentCountry extends React.Component {
   async initComponent() {
     await this.getItemStorage(VARS.KEY_COUNTRY).then((result) => {
       this.setState({
-        location: result,
+        currentCountry: result,
       });
     });
-    if (this.state.location === null) {
+    if (this.state.currentCountry === null) {
       await this.fetchIpLocation().then((result) => {
         this.setState({
-          location: result,
+          currentCountry: result,
         });
       });
     }
-    this.loadingData(this.state.location);
-    this.startService(this.state.location);
+    this.loadingData(this.state.currentCountry);
+    this.startService(this.state.currentCountry);
   }
 
   startService = (val) => {
@@ -164,7 +163,7 @@ export class CurrentCountry extends React.Component {
     return await fetch(geoIPApiURL)
       .then((response) => response.json())
       .then((responseJson) => {
-        console.log('location : ' + responseJson.country_name);
+        console.log('currentCountry : ' + responseJson.country_name);
         this.setItemStorage(VARS.KEY_COUNTRY, responseJson.country_name);
         return responseJson.country_name;
       })
@@ -191,20 +190,24 @@ export class CurrentCountry extends React.Component {
               flag={data.countryInfo.flag}
               country={data.country}
               updated={data.updated}
-              cases={data.cases}
-              recovered={data.recovered}
-              todayDeaths={data.todayDeaths}
-              todayCases={data.todayCases}
-              critical={data.critical}
-              casesPerOneMillion={data.casesPerOneMillion}
-              active={data.active}
-              deaths={data.deaths}
-              deathsPerOneMillion={data.deathsPerOneMillion}
+              cases={this.formatNumbers(data.cases)}
+              recovered={this.formatNumbers(data.recovered)}
+              todayDeaths={this.formatNumbers(data.todayDeaths)}
+              todayCases={this.formatNumbers(data.todayCases)}
+              critical={this.formatNumbers(data.critical)}
+              casesPerOneMillion={this.formatNumbers(data.casesPerOneMillion)}
+              active={this.formatNumbers(data.active)}
+              deaths={this.formatNumbers(data.deaths)}
+              deathsPerOneMillion={this.formatNumbers(data.deathsPerOneMillion)}
             />
           )}
         </View>
       </SafeAreaView>
     );
+  }
+
+  formatNumbers(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }
 
