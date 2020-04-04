@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  Image,
+} from 'react-native';
 import {
   Container,
+  Badge,
   Header,
   Item,
   Input,
-  Icon,
   List,
   ListItem,
   Left,
@@ -15,6 +22,10 @@ import {
   Text,
 } from 'native-base';
 import _ from 'lodash';
+import {IMAGE} from '../constants/Images';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 export class AllCountries extends Component {
   constructor(props) {
@@ -60,26 +71,37 @@ export class AllCountries extends Component {
   }, 250);
 
   render() {
+    const {container, header_item, search_icon} = styles;
     return (
-      <Container>
-        <Header searchBar rounded>
-          <Item>
-            {/*  */}
-            <Icon name="ios-search" />
-            <Input placeholder="Search" onChangeText={this.handleSearch} />
-          </Item>
-        </Header>
-        <List>
-          <FlatList
-            data={this.state.data}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            // ListFooterComponent={this.renderFooter}
-            refreshing={this.state.isLoading}
-            onRefresh={this.loadingData}
-          />
-        </List>
-      </Container>
+      <SafeAreaView style={container}>
+        <Container style={{width: '100%'}}>
+          <Header
+            searchBar
+            rounded
+            androidStatusBarColor="black"
+            style={{
+              backgroundColor: '#b6b6b6',
+              alignItems: 'center',
+            }}>
+            <Item style={header_item}>
+              <Input placeholder="Search..." onChangeText={this.handleSearch} />
+              <TouchableOpacity onPress={this.handleSearch}>
+                <Image source={IMAGE.ICON_SEARCH} style={search_icon} />
+              </TouchableOpacity>
+            </Item>
+          </Header>
+          <List>
+            <FlatList
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              // ListFooterComponent={this.renderFooter}
+              refreshing={this.state.isLoading}
+              onRefresh={this.loadingData}
+            />
+          </List>
+        </Container>
+      </SafeAreaView>
     );
   }
 
@@ -91,8 +113,8 @@ export class AllCountries extends Component {
         </Left>
         <Body>
           <Text>{item.country}</Text>
-          <Text note>cases : {item.cases}</Text>
-          <Text note>todayCases : {item.todayCases}</Text>
+          <Text note>Total Cases : {this.formatNumbers(item.cases)}</Text>
+          <Text note>Today Cases : {this.formatNumbers(item.todayCases)}</Text>
         </Body>
         {/* <Right>
             <Text note>3:43 pm</Text>
@@ -100,6 +122,10 @@ export class AllCountries extends Component {
       </ListItem>
     );
   };
+
+  formatNumbers(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
 
   renderFooter = () => {
     if (!this.state.isLoading) return null;
@@ -128,7 +154,7 @@ export class AllCountries extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f00',
+    backgroundColor: '#f0f0f0',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -137,9 +163,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#CED0CE',
   },
-  content: {
-    height: 50,
-    justifyContent: 'center',
-    backgroundColor: '#fff',
+  search_icon: {
+    width: 25,
+    height: 25,
+    marginRight: 10,
+    opacity: 0.6,
   },
 });

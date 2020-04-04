@@ -54,6 +54,8 @@ target 'covid19_info_stats' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'covid19_info_statsTests' do
     inherit! :complete
     # Pods for testing

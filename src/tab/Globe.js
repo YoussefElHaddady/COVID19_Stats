@@ -57,14 +57,14 @@ export class Globe extends React.Component {
 
   render() {
     let {isLoading, data} = this.state;
-    let {container} = styles;
+    let {container, indicatior_view} = styles;
 
     return (
       <SafeAreaView style={{flex: 1}}>
         <View style={container}>
           {isLoading ? (
-            <View /* style={{flex: 1, paddingTop: 20}} */>
-              <ActivityIndicator />
+            <View style={indicatior_view}>
+              <ActivityIndicator size="large" />
             </View>
           ) : (
             <GlobeView
@@ -89,5 +89,10 @@ export class Globe extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  indicatior_view: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
