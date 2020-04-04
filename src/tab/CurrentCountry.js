@@ -13,6 +13,7 @@ import {notificationManager} from '../notifications/NotificationManager';
 
 import BackgroundTimer from 'react-native-background-timer';
 import {VARS} from '../constants/vars';
+import {CountryView} from './CountryView';
 
 export class CurrentCountry extends React.Component {
   getItemStorage = async (key) => {
@@ -186,11 +187,20 @@ export class CurrentCountry extends React.Component {
               <ActivityIndicator />
             </View>
           ) : (
-            <View>
-              <Text>{data.country}</Text>
-              <Text note>cases : {data.cases}</Text>
-              <Text note>todayCases : {data.todayCases}</Text>
-            </View>
+            <CountryView
+              flag={data.countryInfo.flag}
+              country={data.country}
+              updated={data.updated}
+              cases={data.cases}
+              recovered={data.recovered}
+              todayDeaths={data.todayDeaths}
+              todayCases={data.todayCases}
+              critical={data.critical}
+              casesPerOneMillion={data.casesPerOneMillion}
+              active={data.active}
+              deaths={data.deaths}
+              deathsPerOneMillion={data.deathsPerOneMillion}
+            />
           )}
         </View>
       </SafeAreaView>
@@ -203,6 +213,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
   },
 });

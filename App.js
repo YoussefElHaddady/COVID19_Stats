@@ -44,7 +44,7 @@ export default class App extends React.Component {
             },
           })}
           tabBarOptions={{
-            activeTintColor: 'green',
+            activeTintColor: 'black',
             inactiveTintColor: 'black',
           }}>
           <Tab.Screen name="Your Country" component={CurrentCountry} />
