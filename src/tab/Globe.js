@@ -5,11 +5,16 @@ import {
   SafeAreaView,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  ScrollView,
 } from 'react-native';
 
 import BackgroundTimer from 'react-native-background-timer';
 import {GlobeView} from './GlobeView';
 import {VARS} from '../constants/vars';
+import {IMAGE} from '../constants/images';
+import {HistoryLink} from './HistoryLink';
 
 export class Globe extends React.Component {
   constructor(props) {
@@ -56,6 +61,7 @@ export class Globe extends React.Component {
   };
 
   render() {
+    let {navigation} = this.props;
     let {isLoading, data} = this.state;
     let {container, indicatior_view} = styles;
 
@@ -67,14 +73,22 @@ export class Globe extends React.Component {
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <GlobeView
-              updated={data.updated}
-              cases={this.formatNumbers(data.cases)}
-              deaths={this.formatNumbers(data.deaths)}
-              recovered={this.formatNumbers(data.recovered)}
-              active={this.formatNumbers(data.active)}
-              affectedCountries={this.formatNumbers(data.affectedCountries)}
-            />
+            <ScrollView>
+              <GlobeView
+                updated={data.updated}
+                cases={this.formatNumbers(data.cases)}
+                deaths={this.formatNumbers(data.deaths)}
+                recovered={this.formatNumbers(data.recovered)}
+                active={this.formatNumbers(data.active)}
+                affectedCountries={this.formatNumbers(data.affectedCountries)}
+              />
+              <HistoryLink
+                navigation={navigation}
+                title="World's COVID19 History"
+                country="all"
+                link_text="Get Historical Statistics"
+              />
+            </ScrollView>
           )}
         </View>
       </SafeAreaView>

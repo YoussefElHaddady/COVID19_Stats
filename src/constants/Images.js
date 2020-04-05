@@ -1,6 +1,7 @@
 const IMAGE = {
   IMG_WORLD_HEADER: require('../images/world_header.jpg'),
 
+  ICON_BACK: require('../images/back.png'),
   ICON_SEARCH: require('../images/search.png'),
 
   ICON_ALL_COUNTRIES: require('../images/all_countries.png'),

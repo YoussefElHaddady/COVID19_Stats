@@ -5,15 +5,19 @@ import {
   SafeAreaView,
   StyleSheet,
   AsyncStorage,
+  ScrollView,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
 } from 'react-native';
+
+import BackgroundTimer from 'react-native-background-timer';
 
 import {notificationManager} from '../notifications/NotificationManager';
 
-import BackgroundTimer from 'react-native-background-timer';
 import {VARS} from '../constants/vars';
 import {CountryView} from './CountryView';
+import {HistoryLink} from './HistoryLink';
 
 export class CurrentCountry extends React.Component {
   getItemStorage = async (key) => {
@@ -44,7 +48,7 @@ export class CurrentCountry extends React.Component {
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.initComponent();
     this.initNotifications();
   }
@@ -175,7 +179,8 @@ export class CurrentCountry extends React.Component {
   };
 
   render() {
-    let {isLoading, data} = this.state;
+    let {navigation} = this.props;
+    let {isLoading, data, currentCountry} = this.state;
     let {container} = styles;
 
     return (
@@ -183,23 +188,37 @@ export class CurrentCountry extends React.Component {
         <View style={container}>
           {isLoading ? (
             <View>
-              <ActivityIndicator />
+              <ActivityIndicator size="large" />
             </View>
           ) : (
-            <CountryView
-              flag={data.countryInfo.flag}
-              country={data.country}
-              updated={data.updated}
-              cases={this.formatNumbers(data.cases)}
-              recovered={this.formatNumbers(data.recovered)}
-              todayDeaths={this.formatNumbers(data.todayDeaths)}
-              todayCases={this.formatNumbers(data.todayCases)}
-              critical={this.formatNumbers(data.critical)}
-              casesPerOneMillion={this.formatNumbers(data.casesPerOneMillion)}
-              active={this.formatNumbers(data.active)}
-              deaths={this.formatNumbers(data.deaths)}
-              deathsPerOneMillion={this.formatNumbers(data.deathsPerOneMillion)}
-            />
+            <ScrollView style={{width: '100%'}}>
+              <View>
+                <CountryView
+                  flag={data.countryInfo.flag}
+                  country={data.country}
+                  updated={data.updated}
+                  cases={this.formatNumbers(data.cases)}
+                  recovered={this.formatNumbers(data.recovered)}
+                  todayDeaths={this.formatNumbers(data.todayDeaths)}
+                  todayCases={this.formatNumbers(data.todayCases)}
+                  critical={this.formatNumbers(data.critical)}
+                  casesPerOneMillion={this.formatNumbers(
+                    data.casesPerOneMillion,
+                  )}
+                  active={this.formatNumbers(data.active)}
+                  deaths={this.formatNumbers(data.deaths)}
+                  deathsPerOneMillion={this.formatNumbers(
+                    data.deathsPerOneMillion,
+                  )}
+                />
+                <HistoryLink
+                  navigation={navigation}
+                  title={currentCountry + "'s covid19 history"}
+                  country={currentCountry}
+                  link_text="Get Historical Statistics"
+                />
+              </View>
+            </ScrollView>
           )}
         </View>
       </SafeAreaView>

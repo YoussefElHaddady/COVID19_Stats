@@ -7,9 +7,10 @@ import {
   StyleSheet,
   Dimensions,
   ImageBackground,
+  StatusBar,
 } from 'react-native';
 
-import {IMAGE} from '../constants/Images';
+import {IMAGE} from '../constants/images';
 
 import moment from 'moment';
 

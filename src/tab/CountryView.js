@@ -43,78 +43,72 @@ export class CountryView extends Component {
       card_stat_type,
     } = styles;
     return (
-      <ScrollView style={container}>
-        <View style={card}>
-          <View style={card_header}>
-            <Image style={card_flag} source={{uri: flag}} />
-            <Text
-              style={[textStyle, card_country_name, card_country_name_text]}>
-              {country}
-            </Text>
-            <Text style={[textStyle, card_update_date]}>
-              last update : {moment(updated).format('DD/MM/YYYY HH:MM')}
-            </Text>
-          </View>
+      <View style={card}>
+        <View style={card_header}>
+          <Image style={card_flag} source={{uri: flag}} />
+          <Text style={[textStyle, card_country_name, card_country_name_text]}>
+            {country}
+          </Text>
+          <Text style={[textStyle, card_update_date]}>
+            last update : {moment(updated).format('DD/MM/YYYY HH:MM')}
+          </Text>
+        </View>
 
-          <View style={card_stats}>
-            <View style={card_stat_group}>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}> {cases} </Text>
-                <Text style={[textStyle, card_stat_type]}>Cases</Text>
-              </View>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}> {recovered} </Text>
-                <Text style={[textStyle, card_stat_type]}>Recovered</Text>
-              </View>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}>
-                  {' '}
-                  {todayDeaths}{' '}
-                </Text>
-                <Text style={[textStyle, card_stat_type]}>Today Deaths</Text>
-              </View>
+        <View style={card_stats}>
+          <View style={card_stat_group}>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}> {cases} </Text>
+              <Text style={[textStyle, card_stat_type]}>Cases</Text>
             </View>
-            <View style={card_stat_group}>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}> {todayCases} </Text>
-                <Text style={[textStyle, card_stat_type]}>Today Cases</Text>
-              </View>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}> {critical} </Text>
-                <Text style={[textStyle, card_stat_type]}>Critical</Text>
-              </View>
-              <View style={card_stat_item}>
-                <Text style={[textStyle, card_stat_value]}>
-                  {' '}
-                  {casesPerOneMillion}{' '}
-                </Text>
-                <Text style={[textStyle, card_stat_type]}>
-                  cases Per One Million
-                </Text>
-              </View>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}> {recovered} </Text>
+              <Text style={[textStyle, card_stat_type]}>Recovered</Text>
             </View>
-            <View style={card_stat_group}>
-              <View style={[card_stat_item, card_stat_last_group_item]}>
-                <Text style={[textStyle, card_stat_value]}> {active} </Text>
-                <Text style={[textStyle, card_stat_type]}>Active</Text>
-              </View>
-              <View style={[card_stat_item, card_stat_last_group_item]}>
-                <Text style={[textStyle, card_stat_value]}> {deaths} </Text>
-                <Text style={[textStyle, card_stat_type]}>Deaths</Text>
-              </View>
-              <View style={[card_stat_item, card_stat_last_group_item]}>
-                <Text style={[textStyle, card_stat_value]}>
-                  {' '}
-                  {deathsPerOneMillion}{' '}
-                </Text>
-                <Text style={[textStyle, card_stat_type]}>
-                  Deaths Per One Million
-                </Text>
-              </View>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}> {todayDeaths} </Text>
+              <Text style={[textStyle, card_stat_type]}>Today Deaths</Text>
+            </View>
+          </View>
+          <View style={card_stat_group}>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}> {todayCases} </Text>
+              <Text style={[textStyle, card_stat_type]}>Today Cases</Text>
+            </View>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}> {critical} </Text>
+              <Text style={[textStyle, card_stat_type]}>Critical</Text>
+            </View>
+            <View style={card_stat_item}>
+              <Text style={[textStyle, card_stat_value]}>
+                {' '}
+                {casesPerOneMillion}{' '}
+              </Text>
+              <Text style={[textStyle, card_stat_type]}>
+                cases Per One Million
+              </Text>
+            </View>
+          </View>
+          <View style={card_stat_group}>
+            <View style={[card_stat_item, card_stat_last_group_item]}>
+              <Text style={[textStyle, card_stat_value]}> {active} </Text>
+              <Text style={[textStyle, card_stat_type]}>Active</Text>
+            </View>
+            <View style={[card_stat_item, card_stat_last_group_item]}>
+              <Text style={[textStyle, card_stat_value]}> {deaths} </Text>
+              <Text style={[textStyle, card_stat_type]}>Deaths</Text>
+            </View>
+            <View style={[card_stat_item, card_stat_last_group_item]}>
+              <Text style={[textStyle, card_stat_value]}>
+                {' '}
+                {deathsPerOneMillion}{' '}
+              </Text>
+              <Text style={[textStyle, card_stat_type]}>
+                Deaths Per One Million
+              </Text>
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     );
   }
 }

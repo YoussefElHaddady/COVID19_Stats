@@ -22,7 +22,7 @@ import {
   Text,
 } from 'native-base';
 import _ from 'lodash';
-import {IMAGE} from '../constants/Images';
+import {IMAGE} from '../constants/images';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {TouchableOpacity} from 'react-native-gesture-handler';
