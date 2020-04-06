@@ -15,7 +15,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {CurrentCountry, Globe, AllCountries, Settings} from './src/tab';
 
 import {IMAGE} from './src/constants/images';
-import {History} from './src/tab/history';
+import {History} from './src/tab/History';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,6 +56,24 @@ function GlobeStack() {
         options={navOptionHandler}
       />
     </StackGlobe.Navigator>
+  );
+}
+
+const StackAllCountries = createStackNavigator();
+function AllCountriesStack() {
+  return (
+    <StackAllCountries.Navigator initialRouteName="All Countries">
+      <StackAllCountries.Screen
+        name="All Countries"
+        component={AllCountries}
+        options={navOptionHandler}
+      />
+      <StackAllCountries.Screen
+        name="CountryHistory"
+        component={History}
+        options={navOptionHandler}
+      />
+    </StackAllCountries.Navigator>
   );
 }
 
@@ -101,7 +119,7 @@ export default class App extends React.Component {
             }}>
             <Tab.Screen name="Your Country" component={CurrentCountryStack} />
             <Tab.Screen name="Globe" component={GlobeStack} />
-            <Tab.Screen name="All Countries" component={AllCountries} />
+            <Tab.Screen name="All Countries" component={AllCountriesStack} />
             <Tab.Screen name="Settings" component={Settings} />
           </Tab.Navigator>
         </NavigationContainer>

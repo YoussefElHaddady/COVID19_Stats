@@ -9,12 +9,12 @@ export class HistoryLink extends Component {
     return (
       <TouchableOpacity
         style={history_link}
-        onPress={() =>
+        onPress={() => {
           navigation.navigate('CountryHistory', {
             title: title,
             country: country,
-          })
-        }>
+          });
+        }}>
         <Text style={history_link_text}>{link_text}</Text>
         <Image source={IMAGE.ICON_BACK} style={history_link_image} />
       </TouchableOpacity>
@@ -46,7 +46,11 @@ const styles = StyleSheet.create({
   history_link_image: {
     width: 25,
     height: 25,
-    rotation: 180,
+    transform: [
+      {
+        rotate: '180deg',
+      },
+    ],
     opacity: 0.6,
   },
 });
