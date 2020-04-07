@@ -15,12 +15,14 @@ import {GlobeView} from './GlobeView';
 import {VARS} from '../constants/vars';
 import {IMAGE} from '../constants/images';
 import {HistoryLink} from './HistoryLink';
+import {NoData} from './NoData';
 
 export class Globe extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
+      isLoaded: false,
       data: [],
       error: null,
     };
@@ -45,24 +47,26 @@ export class Globe extends React.Component {
     const apiURL = 'https://corona.lmao.ninja/all';
 
     return fetch(apiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         this.setState({
           isLoading: false,
+          isLoaded: true,
           data: responseJson,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           error: error,
           isLoading: false,
+          isLoaded: false,
         });
       });
   };
 
   render() {
     let {navigation} = this.props;
-    let {isLoading, data} = this.state;
+    let {isLoading, isLoaded, data} = this.state;
     let {container, indicatior_view} = styles;
 
     return (
@@ -72,6 +76,8 @@ export class Globe extends React.Component {
             <View style={indicatior_view}>
               <ActivityIndicator size="large" />
             </View>
+          ) : !isLoaded ? (
+            <NoData />
           ) : (
             <ScrollView>
               <GlobeView
@@ -103,6 +109,8 @@ export class Globe extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   indicatior_view: {
     flex: 1,

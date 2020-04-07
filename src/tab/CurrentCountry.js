@@ -18,9 +18,10 @@ import {notificationManager} from '../notifications/NotificationManager';
 import {VARS} from '../constants/vars';
 import {CountryView} from './CountryView';
 import {HistoryLink} from './HistoryLink';
+import {NoData} from './NoData';
 
 export class CurrentCountry extends React.Component {
-  getItemStorage = async (key) => {
+  getItemStorage = async key => {
     try {
       const value = await AsyncStorage.getItem(key);
       return value;
@@ -42,6 +43,7 @@ export class CurrentCountry extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
+      isLoaded: false,
       data: [],
       currentCountry: '',
       error: null,
@@ -91,13 +93,13 @@ export class CurrentCountry extends React.Component {
   };
 
   async initComponent() {
-    await this.getItemStorage(VARS.KEY_COUNTRY).then((result) => {
+    await this.getItemStorage(VARS.KEY_COUNTRY).then(result => {
       this.setState({
         currentCountry: result,
       });
     });
     if (this.state.currentCountry === null) {
-      await this.fetchIpLocation().then((result) => {
+      await this.fetchIpLocation().then(result => {
         this.setState({
           currentCountry: result,
         });
@@ -107,7 +109,7 @@ export class CurrentCountry extends React.Component {
     this.startService(this.state.currentCountry);
   }
 
-  startService = (val) => {
+  startService = val => {
     BackgroundTimer.setInterval(() => {
       console.log('I m calling');
       this.loadingData(val);
@@ -118,17 +120,18 @@ export class CurrentCountry extends React.Component {
     BackgroundTimer.clearInterval();
   };
 
-  loadingData = async (country) => {
+  loadingData = async country => {
     const apiURL = 'https://corona.lmao.ninja/countries/' + country;
 
     return await fetch(apiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         this.setState({
           isLoading: false,
+          isLoaded: true,
           data: responseJson,
         });
-        this.getItemStorage(VARS.KEY_OLD_CASES_NB).then((nb) => {
+        this.getItemStorage(VARS.KEY_OLD_CASES_NB).then(nb => {
           if (nb !== null) {
             if (parseInt(nb) !== parseInt(responseJson.cases)) {
               console.log('notify');
@@ -153,10 +156,11 @@ export class CurrentCountry extends React.Component {
           }
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           error: error,
           isLoading: false,
+          isLoaded: false,
         });
       });
   };
@@ -165,13 +169,13 @@ export class CurrentCountry extends React.Component {
     const geoIPApiURL = 'https://ipapi.co/json/';
 
     return await fetch(geoIPApiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         console.log('currentCountry : ' + responseJson.country_name);
         this.setItemStorage(VARS.KEY_COUNTRY, responseJson.country_name);
         return responseJson.country_name;
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           error: error,
         });
@@ -180,7 +184,7 @@ export class CurrentCountry extends React.Component {
 
   render() {
     let {navigation} = this.props;
-    let {isLoading, data, currentCountry} = this.state;
+    let {isLoading, isLoaded, data, currentCountry} = this.state;
     let {container} = styles;
 
     return (
@@ -190,6 +194,8 @@ export class CurrentCountry extends React.Component {
             <View>
               <ActivityIndicator size="large" />
             </View>
+          ) : !isLoaded ? (
+            <NoData />
           ) : (
             <ScrollView style={{width: '100%'}}>
               <View>
