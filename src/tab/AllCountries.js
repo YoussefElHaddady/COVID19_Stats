@@ -139,9 +139,6 @@ export class AllCountries extends Component {
           <View style={modal_flag_view}>
             <TouchableOpacity
               style={close}
-              ref={(component) => {
-                this.touchable = component;
-              }}
               onPress={() => this.setState({showModal: false})}>
               <Image style={close} source={IMAGE.ICON_CLOSE} />
             </TouchableOpacity>

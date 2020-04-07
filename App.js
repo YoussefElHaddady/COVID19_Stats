@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,7 +6,11 @@ import {
   Image,
   SafeAreaView,
   StatusBar,
+  BackHandler,
 } from 'react-native';
+
+import NetInfo from '@react-native-community/netinfo';
+import Dialog from 'react-native-dialog';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -77,55 +81,100 @@ function AllCountriesStack() {
   );
 }
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar backgroundColor="black" />
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({route}) => ({
-              tabBarIcon: ({focused, color, size}) => {
-                let iconName;
+const App = () => {
+  const [isInternetReachable, setIsInternetReachable] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-                if (route.name === 'Your Country') {
-                  iconName = focused
-                    ? IMAGE.ICON_CURRENT_COUNTRY_DARK
-                    : IMAGE.ICON_CURRENT_COUNTRY;
-                } else if (route.name === 'Globe') {
-                  iconName = focused ? IMAGE.ICON_GLOBE_DARK : IMAGE.ICON_GLOBE;
-                } else if (route.name === 'All Countries') {
-                  iconName = focused
-                    ? IMAGE.ICON_ALL_COUNTRIES_DARK
-                    : IMAGE.ICON_ALL_COUNTRIES;
-                } else if (route.name === 'Settings') {
-                  iconName = focused
-                    ? IMAGE.ICON_SETTINGS_DARK
-                    : IMAGE.ICON_SETTINGS;
-                }
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log('isInternetReachable: ', isInternetReachable);
+      setIsInternetReachable(state.isInternetReachable);
+      setIsVisible(!isInternetReachable);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
-                return (
-                  <Image
-                    source={iconName}
-                    style={{width: 20, height: 20}}
-                    resizeMode="contain"
-                  />
-                );
-              },
-            })}
-            tabBarOptions={{
-              activeTintColor: 'black',
-              inactiveTintColor: 'black',
-            }}>
-            <Tab.Screen name="Your Country" component={CurrentCountryStack} />
-            <Tab.Screen name="Globe" component={GlobeStack} />
-            <Tab.Screen name="All Countries" component={AllCountriesStack} />
-            <Tab.Screen name="Settings" component={Settings} />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
-    );
-  }
-}
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <StatusBar backgroundColor="black" />
+      {isInternetReachable ? null : (
+        <Dialog.Container visible={isVisible}>
+          <Dialog.Title>Oops!</Dialog.Title>
+          <Dialog.Description>No Internet Connection</Dialog.Description>
+          {/* <Dialog.Button label="Ok" onPress={() => BackHandler.exitApp()} /> */}
+          <Dialog.Button label="Ok" onPress={() => setIsVisible(false)} />
+        </Dialog.Container>
+      )}
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            tabBarLabel: () => {
+              let tabLabel;
+
+              switch (route.name) {
+                case 'Your Country':
+                  tabLabel = 'Your Country';
+                  break;
+                case 'Globe':
+                  tabLabel = 'Globe';
+                  break;
+                case 'All Countries':
+                  tabLabel = 'All Countries';
+                  break;
+                case 'Settings':
+                  tabLabel = 'Settings';
+                  break;
+              }
+              return (
+                <Text style={{textAlign: 'center', fontSize: 11}}>
+                  {tabLabel}
+                </Text>
+              );
+            },
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
+
+              if (route.name === 'Your Country') {
+                iconName = focused
+                  ? IMAGE.ICON_CURRENT_COUNTRY_DARK
+                  : IMAGE.ICON_CURRENT_COUNTRY;
+              } else if (route.name === 'Globe') {
+                iconName = focused ? IMAGE.ICON_GLOBE_DARK : IMAGE.ICON_GLOBE;
+              } else if (route.name === 'All Countries') {
+                iconName = focused
+                  ? IMAGE.ICON_ALL_COUNTRIES_DARK
+                  : IMAGE.ICON_ALL_COUNTRIES;
+              } else if (route.name === 'Settings') {
+                iconName = focused
+                  ? IMAGE.ICON_SETTINGS_DARK
+                  : IMAGE.ICON_SETTINGS;
+              }
+
+              return (
+                <Image
+                  source={iconName}
+                  style={{width: 20, height: 20}}
+                  resizeMode="contain"
+                />
+              );
+            },
+          })}
+          tabBarOptions={{
+            activeTintColor: 'black',
+            inactiveTintColor: 'black',
+          }}>
+          <Tab.Screen name="Your Country" component={CurrentCountryStack} />
+          <Tab.Screen name="Globe" component={GlobeStack} />
+          <Tab.Screen name="All Countries" component={AllCountriesStack} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
+  );
+};
+
+export default App;
 
 const styles = StyleSheet.create({});
