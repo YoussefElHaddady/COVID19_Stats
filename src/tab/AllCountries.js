@@ -24,7 +24,18 @@ import {
   Right,
   Thumbnail,
   Text,
+  Form,
+  Picker,
+  Icon,
 } from 'native-base';
+
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from 'react-native-popup-menu';
+
 import moment from 'moment';
 import _ from 'lodash';
 import {IMAGE} from '../constants/images';
@@ -59,15 +70,15 @@ export class AllCountries extends Component {
     console.log('calling loadingData');
     const apiURL = 'https://corona.lmao.ninja/countries';
     return fetch(apiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         this.setState({
           isLoading: false,
           data: responseJson,
           fullData: responseJson,
         });
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           error: error,
           isLoading: false,
@@ -77,7 +88,7 @@ export class AllCountries extends Component {
 
   render() {
     let {data, isLoading, showModal, clickedItem, itemImgUri} = this.state;
-    const {container, header_item, search_icon} = styles;
+    const {container, header_item, search_icon, menu_icon} = styles;
     return (
       <SafeAreaView style={container}>
         <Container style={{width: '100%'}}>
@@ -91,12 +102,73 @@ export class AllCountries extends Component {
             }}>
             <Item style={header_item}>
               <Input placeholder="Search..." onChangeText={this.handleSearch} />
-              <TouchableOpacity onPress={this.handleSearch}>
+              <TouchableOpacity>
                 <Image source={IMAGE.ICON_SEARCH} style={search_icon} />
               </TouchableOpacity>
             </Item>
+            <Menu>
+              <MenuTrigger>
+                <Image source={IMAGE.ICON_MENU} style={menu_icon} />
+              </MenuTrigger>
+              <MenuOptions>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByCountryNameAsc()}>
+                  <Text style={{padding: 4}}>country name </Text>
+                  <Icon
+                    name="arrow-up"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByCountryNameDesc()}>
+                  <Text style={{padding: 4}}>country name </Text>
+                  <Icon
+                    name="arrow-down"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByCasesAsc()}>
+                  <Text style={{padding: 4}}>cases </Text>
+                  <Icon
+                    name="arrow-up"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByCasesDesc()}>
+                  <Text style={{padding: 4}}>cases </Text>
+                  <Icon
+                    name="arrow-down"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByCasesAsc()}>
+                  <Text style={{padding: 4}}>today cases </Text>
+                  <Icon
+                    name="arrow-up"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+                <MenuOption
+                  style={{flexDirection: 'row', alignItems: 'center'}}
+                  onSelect={() => this.sortByTodayCasesDesc()}>
+                  <Text style={{padding: 4}}>today cases desc</Text>
+                  <Icon
+                    name="arrow-down"
+                    style={{fontSize: 18, fontWeight: '600'}}
+                  />
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
           </Header>
-          <List>
+          <List style={{flex: 1}}>
             <FlatList
               data={data}
               renderItem={this.renderItem}
@@ -195,6 +267,12 @@ export class AllCountries extends Component {
               </View>
               <View style={modal_main_view_row}>
                 <Text style={modal_main_view_row_value}>
+                  {this.formatNumbers(clickedItem.tests)}
+                </Text>
+                <Text style={modal_main_view_row_type}>Tests</Text>
+              </View>
+              <View style={modal_main_view_row}>
+                <Text style={modal_main_view_row_value}>
                   {this.formatNumbers(clickedItem.casesPerOneMillion)}
                 </Text>
                 <Text style={modal_main_view_row_type}>
@@ -207,6 +285,14 @@ export class AllCountries extends Component {
                 </Text>
                 <Text style={modal_main_view_row_type}>
                   Deaths Per One Million
+                </Text>
+              </View>
+              <View style={modal_main_view_row}>
+                <Text style={modal_main_view_row_value}>
+                  {this.formatNumbers(clickedItem.testPerOneMillion)}
+                </Text>
+                <Text style={modal_main_view_row_type}>
+                  Tests Per One Million
                 </Text>
               </View>
               <View style={buttons_view}>
@@ -232,10 +318,6 @@ export class AllCountries extends Component {
         </View>
       </Modal>
     );
-  }
-
-  closeModal() {
-    this.setState({showModal: false});
   }
 
   renderItem = ({item, index}) => {
@@ -278,9 +360,9 @@ export class AllCountries extends Component {
     );
   };
 
-  handleSearch = (text) => {
+  handleSearch = text => {
     const formattedQuery = text.toLowerCase();
-    const data = _.filter(this.state.fullData, (countries) => {
+    const data = _.filter(this.state.fullData, countries => {
       if (countries.country.toLowerCase().includes(formattedQuery)) {
         return true;
       }
@@ -289,6 +371,54 @@ export class AllCountries extends Component {
     this.setState({
       data: data,
       query: text,
+    });
+  };
+
+  sortByCountryNameAsc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['country'], ['asc']);
+    this.setState({
+      data: sortedData,
+    });
+  };
+
+  sortByCountryNameDesc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['country'], ['desc']);
+    this.setState({
+      data: sortedData,
+    });
+  };
+
+  sortByCasesAsc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['cases'], ['asc']);
+    this.setState({
+      data: sortedData,
+    });
+  };
+
+  sortByCasesDesc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['cases'], ['desc']);
+    this.setState({
+      data: sortedData,
+    });
+  };
+
+  sortByTodayCasesAsc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['todayCases'], ['asc']);
+    this.setState({
+      data: sortedData,
+    });
+  };
+
+  sortByTodayCasesDesc = () => {
+    let sortedData = this.state.data;
+    sortedData = _.orderBy(sortedData, ['todayCases'], ['desc']);
+    this.setState({
+      data: sortedData,
     });
   };
 }
@@ -309,6 +439,13 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     marginRight: 10,
+    opacity: 0.6,
+  },
+  menu_icon: {
+    width: 25,
+    height: 25,
+    marginRight: 0,
+    marginVertical: 8,
     opacity: 0.6,
   },
 

@@ -3,6 +3,7 @@ const IMAGE = {
 
   ICON_BACK: require('../images/back.png'),
   ICON_SEARCH: require('../images/search.png'),
+  ICON_MENU: require('../images/menu.png'),
   ICON_CLOSE: require('../images/close.png'),
 
   ICON_ALL_COUNTRIES: require('../images/all_countries.png'),
