@@ -105,13 +105,44 @@ export class Settings extends React.Component {
   };
 
   render() {
-    let {isLoading, selectedCountry} = this.state;
+    const {
+      current_country_row,
+      current_country_row_title,
+      current_country_row_desc
+    } = styles
     return (
       <SafeAreaView style={{flex: 1}}>
-        {/* <Text>selected country : {this.readStorage()}</Text> */}
-        <View style={styles.MainContainer}>
+        {this.renderHeader()}
+        <View style={current_country_row}>
+          <Text style={current_country_row_title}>Your current country : </Text>
+          {this.renderCountryPiker()}
+        </View>
+      </SafeAreaView>
+    );
+  }
+  
+  renderHeader() {
+    const {
+      header,
+      header_title_text,
+    } = styles;
+    
+    return (
+      <View style={header}>
+        <View>
+          <Text style={header_title_text}>Settings</Text>
+        </View>
+      </View>
+    );
+  }
+  
+  renderCountryPiker() {
+    let {isLoading, selectedCountry} = this.state;
+    const {country_picker} = styles
+    return (
+    <View style={country_picker}>
           {isLoading ? (
-            <View /* style={{flex: 1, paddingTop: 20}} */>
+            <View >
               <ActivityIndicator />
             </View>
           ) : (
@@ -134,35 +165,47 @@ export class Settings extends React.Component {
             </Picker>
           )}
         </View>
-        <TouchableOpacity onPress={() => this.removeStorage}>
-          <Text>reset</Text>
-        </TouchableOpacity>
-        {/* <View style={styles.container}>
-          <Text>Your Country!</Text>
-          <TouchableOpacity onPress={this.saveStorage}>
-            <Text>Save String</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.readStorage}>
-            <Text>Read String</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.removeStorage}>
-            <Text>Remove String</Text>
-          </TouchableOpacity>
-        </View> */}
-      </SafeAreaView>
-    );
+        );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  header: {
     justifyContent: 'center',
     alignItems: 'center',
+    height: 50,
+    shadowOffset: {width: 10, height: 10},
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    elevation: 1,
+    borderBottomColor: '#0000',
   },
-  MainContainer: {
-    justifyContent: 'center',
+  header_title_text: {
+    textAlign: 'left',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  current_country_row: {
+    marginTop: 30,
+    marginLeft: 8,
+  },
+  current_country_row_title: {
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
+  current_country_row_desc: {
+    fontSize: 14,
+    color: '#00000055',
+  },
+  country_picker: {
     flex: 1,
-    margin: 10,
+    justifyContent: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 25,
+    margin: 8,
+    marginLeft: 0,
+    borderRadius: 5,
+    backgroundColor: '#FFFFFF',
+    elevation: 3,
   },
 });

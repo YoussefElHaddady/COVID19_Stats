@@ -140,8 +140,10 @@ export class CurrentCountry extends React.Component {
                 'New cases in ' + responseJson.country,
                 'total cases : ' +
                   responseJson.cases +
-                  ' today cases : ' +
-                  responseJson.todayCases,
+                  '\ntoday cases : ' +
+                  responseJson.todayCases +
+                  '\ntoday deaths : ' +
+                  responseJson.todayDeaths,
               );
 
               this.setItemStorage(
@@ -232,6 +234,7 @@ export class CurrentCountry extends React.Component {
   }
 
   formatNumbers(num) {
+    if (num === undefined || num === null) return 0;
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }
