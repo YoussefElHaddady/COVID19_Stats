@@ -23,6 +23,8 @@ import {CurrentCountry, Globe, AllCountries, Settings} from './src/tab';
 import {IMAGE} from './src/constants/images';
 import {History} from './src/tab/History';
 
+import SplashScreen from 'react-native-splash-screen';
+
 const Tab = createBottomTabNavigator();
 
 const navOptionHandler = () => ({
@@ -93,10 +95,14 @@ const App = () => {
       setIsInternetReachable(state.isInternetReachable);
       setIsVisible(!isInternetReachable);
     });
+    SplashScreen.hide();
     return () => {
       unsubscribe();
     };
   }, []);
+
+  // componentDidMount() {
+  // }
 
   return (
     <MenuProvider>

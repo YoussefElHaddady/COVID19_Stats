@@ -289,7 +289,7 @@ export class AllCountries extends Component {
               </View>
               <View style={modal_main_view_row}>
                 <Text style={modal_main_view_row_value}>
-                  {this.formatNumbers(clickedItem.testPerOneMillion)}
+                  {this.formatNumbers(clickedItem.testsPerOneMillion)}
                 </Text>
                 <Text style={modal_main_view_row_type}>
                   Tests Per One Million
