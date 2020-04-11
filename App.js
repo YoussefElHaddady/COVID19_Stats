@@ -91,7 +91,6 @@ const App = () => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log('isInternetReachable: ', isInternetReachable);
       setIsInternetReachable(state.isInternetReachable);
       setIsVisible(!isInternetReachable);
     });
@@ -100,9 +99,6 @@ const App = () => {
       unsubscribe();
     };
   }, []);
-
-  // componentDidMount() {
-  // }
 
   return (
     <MenuProvider>

@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {
   View,
-  Image,
   Text,
   ScrollView,
   StyleSheet,
   Dimensions,
   ImageBackground,
-  StatusBar,
 } from 'react-native';
 
 import {IMAGE} from '../constants/images';
@@ -54,7 +52,6 @@ export class GlobeView extends Component {
               </Text>
             </View>
           </ImageBackground>
-          {/* <Text style={header_text}>Globe Stats</Text> */}
         </View>
         <View style={stats}>
           <View style={[stats_values_column]}>
@@ -124,6 +121,7 @@ const styles = StyleSheet.create({
   },
   header: {
     overflow: 'hidden',
+    width: screenWidth,
     height: 280,
   },
   header_image: {
@@ -143,6 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#F0F0F0',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   header_text_view_2: {
     position: 'absolute',
@@ -156,6 +155,7 @@ const styles = StyleSheet.create({
   update_date: {
     fontSize: 15,
     color: 'white',
+    textAlign: 'center',
   },
   stats: {
     padding: 20,

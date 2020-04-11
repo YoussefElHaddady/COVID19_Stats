@@ -5,9 +5,7 @@ import {
   SafeAreaView,
   StyleSheet,
   AsyncStorage,
-  TouchableOpacity,
   ActivityIndicator,
-  Alert,
   Picker,
 } from 'react-native';
 import {VARS} from '../constants/vars';
@@ -17,7 +15,7 @@ export class Settings extends React.Component {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.log('saving data error');
+      console.log('CS : S saving data error');
     }
   };
 
@@ -25,7 +23,7 @@ export class Settings extends React.Component {
     try {
       await AsyncStorage.removeItem(key);
     } catch (error) {
-      console.log('removing data error');
+      console.log('CS : S removing data error');
     }
   };
 
@@ -33,13 +31,12 @@ export class Settings extends React.Component {
     try {
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
-        // We have data!!
         return value;
       } else {
-        console.log('reading data error');
+        console.log('CS : S reading data error');
       }
     } catch (error) {
-      console.log('reading data error');
+      console.log('CS : S reading data error');
     }
   };
 
@@ -66,7 +63,6 @@ export class Settings extends React.Component {
       selectedCountry: '',
       data: [],
       error: null,
-      // timeLaps: 1,
     };
   }
 
@@ -76,7 +72,7 @@ export class Settings extends React.Component {
   }
 
   loadingData = () => {
-    console.log('calling loadingData');
+    console.log('CS : S calling loadingData');
     const apiURL = 'https://corona.lmao.ninja/countries';
 
     return fetch(apiURL)
@@ -92,11 +88,8 @@ export class Settings extends React.Component {
           error: error,
           isLoading: false,
         });
+        console.log('CS : S calling loadingData error');
       });
-  };
-
-  getPickerSelectedItemValue = () => {
-    Alert.alert(this.state.selectedCountry);
   };
 
   saveChanges = itemValue => {
@@ -108,8 +101,8 @@ export class Settings extends React.Component {
     const {
       current_country_row,
       current_country_row_title,
-      current_country_row_desc
-    } = styles
+      current_country_row_desc,
+    } = styles;
     return (
       <SafeAreaView style={{flex: 1}}>
         {this.renderHeader()}
@@ -120,13 +113,10 @@ export class Settings extends React.Component {
       </SafeAreaView>
     );
   }
-  
+
   renderHeader() {
-    const {
-      header,
-      header_title_text,
-    } = styles;
-    
+    const {header, header_title_text} = styles;
+
     return (
       <View style={header}>
         <View>
@@ -135,37 +125,37 @@ export class Settings extends React.Component {
       </View>
     );
   }
-  
+
   renderCountryPiker() {
     let {isLoading, selectedCountry} = this.state;
-    const {country_picker} = styles
+    const {country_picker} = styles;
     return (
-    <View style={country_picker}>
-          {isLoading ? (
-            <View >
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <Picker
-              selectedValue={selectedCountry}
-              onValueChange={(itemValue, itemIndex) =>
-                this.saveChanges(itemValue)
-              }>
-              {this.state.data
-                .sort((a, b) => {
-                  return a.country.localeCompare(b.country);
-                })
-                .map((item, key) => (
-                  <Picker.Item
-                    label={item.country}
-                    value={item.country}
-                    key={key}
-                  />
-                ))}
-            </Picker>
-          )}
-        </View>
-        );
+      <View style={country_picker}>
+        {isLoading ? (
+          <View>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <Picker
+            selectedValue={selectedCountry}
+            onValueChange={(itemValue, itemIndex) =>
+              this.saveChanges(itemValue)
+            }>
+            {this.state.data
+              .sort((a, b) => {
+                return a.country.localeCompare(b.country);
+              })
+              .map((item, key) => (
+                <Picker.Item
+                  label={item.country}
+                  value={item.countryInfo.iso3}
+                  key={key}
+                />
+              ))}
+          </Picker>
+        )}
+      </View>
+    );
   }
 }
 
@@ -191,7 +181,7 @@ const styles = StyleSheet.create({
   },
   current_country_row_title: {
     fontSize: 20,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   current_country_row_desc: {
     fontSize: 14,

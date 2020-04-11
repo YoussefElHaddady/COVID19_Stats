@@ -31,22 +31,23 @@ export class History extends Component {
     await this.loadingData(this.props.route.params.country);
   }
 
-  loadingData = async (country) => {
-    console.log('loading history for : ' + country);
+  loadingData = async country => {
+    console.log('CS : H loading history for : ' + country);
     const apiURL = 'https://corona.lmao.ninja/v2/historical/' + country;
 
     return await fetch(apiURL)
-      .then((response) => response.json())
-      .then((responseJson) => {
+      .then(response => response.json())
+      .then(responseJson => {
         country === 'all'
           ? this.setStateForAllTheWorld(responseJson)
           : this.setStateForOneCountry(responseJson);
       })
-      .catch((error) => {
+      .catch(error => {
         this.setState({
           error: error,
           isLoading: false,
         });
+        console.log('CS : H loading history error');
       });
   };
 
@@ -74,6 +75,7 @@ export class History extends Component {
     let {route, navigation, isLoading} = this.props;
     const {title} = route.params;
     const {container} = styles;
+
     return (
       <SafeAreaView style={{flex: 1}}>
         {this.renderHeader(navigation, title)}
@@ -111,13 +113,11 @@ export class History extends Component {
               source={IMAGE.ICON_BACK}
               resizeMode="contain"
             />
-            {/* <Text>Back</Text> */}
           </TouchableOpacity>
         </View>
         <View style={header_title}>
           <Text style={header_title_text}>{title}</Text>
         </View>
-        {/* <View style={{flex: 1}}></View> */}
       </View>
     );
   }
@@ -130,7 +130,6 @@ export class History extends Component {
           dataArray={dataArray}
           animation={true}
           expanded={0}
-          // renderHeader={this.renderListItemHeader}
           headerStyle={list_item_header}
           renderContent={this.renderListItemContent}
         />
@@ -185,7 +184,6 @@ export class History extends Component {
         recovered: this.formatNumbers(recovered_arr[ind]),
       });
     });
-    // return formattedArray;
     return desc ? this.orderArray(formattedArray) : formattedArray;
   }
 

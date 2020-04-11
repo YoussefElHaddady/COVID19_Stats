@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
 
 import moment from 'moment';
 

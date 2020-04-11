@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
-  Button,
   Image,
   Modal,
   ScrollView,
@@ -13,7 +12,6 @@ import {
 } from 'react-native';
 import {
   Container,
-  Badge,
   Header,
   Item,
   Input,
@@ -21,11 +19,8 @@ import {
   ListItem,
   Left,
   Body,
-  Right,
   Thumbnail,
   Text,
-  Form,
-  Picker,
   Icon,
 } from 'native-base';
 
@@ -52,23 +47,17 @@ export class AllCountries extends Component {
       showModal: false,
       clickedItem: '',
       itemImgUri: '',
-      // timeLaps: 1,
     };
   }
 
   componentDidMount() {
-    // this.interval = setInterval(() => {
     this.loadingData();
-    //   }, this.state.timeLaps * 60 * 1000);
   }
 
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // }
-
   loadingData = _.debounce(() => {
-    console.log('calling loadingData');
+    console.log('CS : AC loadingData');
     const apiURL = 'https://corona.lmao.ninja/countries';
+
     return fetch(apiURL)
       .then(response => response.json())
       .then(responseJson => {
@@ -77,6 +66,7 @@ export class AllCountries extends Component {
           data: responseJson,
           fullData: responseJson,
         });
+        this.sortByCasesDesc();
       })
       .catch(error => {
         this.setState({
@@ -89,6 +79,7 @@ export class AllCountries extends Component {
   render() {
     let {data, isLoading, showModal, clickedItem, itemImgUri} = this.state;
     const {container, header_item, search_icon, menu_icon} = styles;
+
     return (
       <SafeAreaView style={container}>
         <Container style={{width: '100%'}}>
@@ -185,7 +176,6 @@ export class AllCountries extends Component {
   }
 
   renderModal(showModal, clickedItem, itemImgUri) {
-    // let {showModal, clickedItem, itemImgUri} = this.state;
     let {navigation} = this.props;
     let {
       back_view,

@@ -3,14 +3,17 @@ import PushNotification from 'react-native-push-notification';
 class NotificationManager {
   configure = (onRegister, onNotification, onOpenNotification) => {
     PushNotification.configure({
-      onRegister: function (token) {
+      onRegister: function(token) {
         onRegister(token);
-        console.log('[NotificationManager] onRegister token:', token);
+        console.log('CS : NM [NotificationManager] onRegister token:', token);
       },
 
       // (required) Called when a remote or local notification is opened or received
-      onNotification: function (notification) {
-        console.log('[NotificationManager] onNotification:', notification);
+      onNotification: function(notification) {
+        console.log(
+          'CS : NM [NotificationManager] onNotification:',
+          notification,
+        );
 
         // process the notification
         notification.userInteraction = true;

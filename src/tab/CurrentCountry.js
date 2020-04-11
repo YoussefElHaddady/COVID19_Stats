@@ -1,14 +1,11 @@
 import * as React from 'react';
 import {
-  Text,
   View,
   SafeAreaView,
   StyleSheet,
   AsyncStorage,
   ScrollView,
   ActivityIndicator,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
 
 import BackgroundTimer from 'react-native-background-timer';
@@ -26,7 +23,8 @@ export class CurrentCountry extends React.Component {
       const value = await AsyncStorage.getItem(key);
       return value;
     } catch (error) {
-      console.log('reading data error 2');
+      console.log('CS : Error reading data from AsyncStorage');
+      console.error(error);
     }
   };
 
@@ -34,7 +32,7 @@ export class CurrentCountry extends React.Component {
     try {
       await AsyncStorage.setItem(key, value);
     } catch (error) {
-      console.log('saving data error');
+      console.log('CS : Error saving data in AsyncStorage');
       console.error(error);
     }
   };
@@ -65,15 +63,15 @@ export class CurrentCountry extends React.Component {
   }
 
   onRegister(token) {
-    console.log('[Notification] Registered : ', token);
+    console.log('CS : [Notification] Registered : ', token);
   }
 
   onNotification(notify) {
-    console.log('[Notification] onNotification: ', notify);
+    console.log('CS : [Notification] onNotification: ', notify);
   }
 
   onOpenNotification(notify) {
-    console.log('[Notification] onOpenNotification: ', notify);
+    console.log('CS : [Notification] onOpenNotification: ', notify);
     this.cancelNotification();
   }
 
@@ -84,11 +82,12 @@ export class CurrentCountry extends React.Component {
       vibrate: true,
     };
 
-    console.log('I have been called with ' + title + ' and ' + text);
+    console.log('CS : notify with ' + title + ' and ' + text);
     this.localNotify.showNotification(title, text, {}, options);
   };
 
   cancelNotification = () => {
+    console.log('CS : [Notification] cancelNotification');
     this.localNotify.cancelAllLocalNotifications();
   };
 
@@ -105,13 +104,21 @@ export class CurrentCountry extends React.Component {
         });
       });
     }
+    if (
+      this.state.currentCountry === undefined ||
+      this.state.currentCountry === null
+    ) {
+      this.setItemStorage(VARS.KEY_COUNTRY, 'MAR');
+      this.setState({
+        currentCountry: 'MAR',
+      });
+    }
     this.loadingData(this.state.currentCountry);
     this.startService(this.state.currentCountry);
   }
 
   startService = val => {
     BackgroundTimer.setInterval(() => {
-      console.log('I m calling');
       this.loadingData(val);
     }, VARS.REFRESH_TIME_LAPSE_CURRENT_COUNTRY * 60 * 1000);
   };
@@ -122,6 +129,7 @@ export class CurrentCountry extends React.Component {
 
   loadingData = async country => {
     const apiURL = 'https://corona.lmao.ninja/countries/' + country;
+    console.log('CS : CC loadingData');
 
     return await fetch(apiURL)
       .then(response => response.json())
@@ -134,7 +142,6 @@ export class CurrentCountry extends React.Component {
         this.getItemStorage(VARS.KEY_OLD_CASES_NB).then(nb => {
           if (nb !== null) {
             if (parseInt(nb) !== parseInt(responseJson.cases)) {
-              console.log('notify');
               this.cancelNotification();
               this.sendNotification(
                 'New cases in ' + responseJson.country,
@@ -164,23 +171,31 @@ export class CurrentCountry extends React.Component {
           isLoading: false,
           isLoaded: false,
         });
+        console.log('CS : CC loadingData error');
+        console.log(error);
       });
   };
 
   fetchIpLocation = async () => {
-    const geoIPApiURL = 'https://ipapi.co/json/';
+    // const geoIPApiURL = 'https://ipapi.co/json/';
+    const geoIPApiKey = '5f0fb991f2a34a1dac5e5df9abbc9374';
+    const geoIPApiURL =
+      'https://api.ipgeolocation.io/ipgeo?apiKey=' + geoIPApiKey;
+
+    console.log('CS : CC fetchIpLocation');
 
     return await fetch(geoIPApiURL)
       .then(response => response.json())
       .then(responseJson => {
-        console.log('currentCountry : ' + responseJson.country_name);
-        this.setItemStorage(VARS.KEY_COUNTRY, responseJson.country_name);
-        return responseJson.country_name;
+        this.setItemStorage(VARS.KEY_COUNTRY, responseJson.country_code3);
+        return responseJson.country_code3;
       })
       .catch(error => {
         this.setState({
           error: error,
         });
+        console.log('CS : CC fetchIpLocation error');
+        console.log(error);
       });
   };
 
@@ -221,8 +236,8 @@ export class CurrentCountry extends React.Component {
                 />
                 <HistoryLink
                   navigation={navigation}
-                  title={currentCountry + "'s covid19 history"}
-                  country={currentCountry}
+                  title={data.country + "'s covid19 history"}
+                  country={data.country}
                   link_text="Get Historical Statistics"
                 />
               </View>
